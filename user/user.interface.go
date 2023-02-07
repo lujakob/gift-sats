@@ -1,7 +1,7 @@
 package user
 
 type IUserStore interface {
-	GetAll() ([]User, error)
+	GetAll() ([]User, int64, error)
 	GetByUsername(string) (*User, error)
 	Create(*User) error
 }

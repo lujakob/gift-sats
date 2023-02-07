@@ -16,15 +16,17 @@ func NewUserStore(db *gorm.DB) *UserStore {
 	}
 }
 
-func (us *UserStore) GetAll() ([]User, error) {
+func (us *UserStore) GetAll() ([]User, int64, error) {
 	var users []User
-	if err := us.db.Find(&users).Error; err != nil {
+	var count int64
+	if err := us.db.Find(&users).Count(&count).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
+			return nil, 0, nil
 		}
-		return nil, err
+		return nil, 0, err
 	}
-	return users, nil
+
+	return users, count, nil
 }
 
 func (us *UserStore) GetByUsername(username string) (*User, error) {

@@ -19,11 +19,12 @@ func (h *Handler) Register(app *fiber.App) {
 	})
 
 	users.Get("", func(c *fiber.Ctx) error {
-		list, error := h.userStore.GetAll()
+		list, count, error := h.userStore.GetAll()
 		if error != nil {
 			return c.Status(http.StatusNotFound).JSON(utils.NotFound())
 		}
-		return c.Status(http.StatusOK).JSON(list)
+
+		return c.Status(http.StatusOK).JSON(newUserListResponse(list, count))
 	})
 
 	users.Post("", func(c *fiber.Ctx) error {
