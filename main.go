@@ -5,7 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/lujakob/gifting-sats/db"
+	"github.com/lujakob/gifting-sats/handler"
 	"github.com/lujakob/gifting-sats/user"
 	"github.com/lujakob/gifting-sats/utils"
 	"gorm.io/gorm"
@@ -44,11 +46,15 @@ func setupRoutes(app *fiber.App, db *gorm.DB) {
 
 func main() {
 	app := fiber.New()
+	app.Use(recover.New())
 
 	d := db.New()
 	db.AutoMigrate(d)
 
-	setupRoutes(app, d)
+	us := user.NewUserStore(d)
+
+	h := handler.NewHandler(us)
+	h.Register(app)
 
 	err := app.Listen(":3000")
 

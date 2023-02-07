@@ -57,7 +57,7 @@ func New() *gorm.DB {
 }
 
 func TestDB() *gorm.DB {
-	dsn := "./../database/realworld_test.db"
+	dsn := "./../database/gifting-sats_test.db"
 	//newLogger := logger.New(
 	//log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 	//logger.Config{
