@@ -29,9 +29,9 @@ func (us *UserStore) GetAll() ([]User, int64, error) {
 	return users, count, nil
 }
 
-func (us *UserStore) GetByUsername(username string) (*User, error) {
+func (us *UserStore) GetByEmail(email string) (*User, error) {
 	var m User
-	if err := us.db.Where(&User{Username: username}).First(&m).Error; err != nil {
+	if err := us.db.Where(&User{Email: email}).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}

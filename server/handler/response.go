@@ -8,6 +8,7 @@ type userResponse struct {
 	User struct {
 		ID       uint   `json:"id"`
 		Username string `json:"username"`
+		Email    string `json:"email"`
 	} `json:"user"`
 }
 
@@ -15,6 +16,7 @@ func newUserResponse(u *user.User) *userResponse {
 	r := new(userResponse)
 	r.User.ID = u.ID
 	r.User.Username = u.Username
+	r.User.Email = u.Email
 	return r
 }
 
@@ -29,6 +31,7 @@ func newUserListResponse(users []user.User, count int64) *userListResponse {
 	for _, u := range users {
 
 		ur.User.Username = u.Username
+		ur.User.Email = u.Email
 
 		r.Users = append(r.Users, ur)
 	}
