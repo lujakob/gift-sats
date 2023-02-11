@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -78,7 +79,7 @@ func TestDB() *gorm.DB {
 }
 
 func DropTestDB() error {
-	if err := os.Remove("./../database/realworld_test.db"); err != nil {
+	if err := os.Remove("./../database/gift-sats_test.db"); err != nil {
 		return err
 	}
 	return nil
@@ -87,5 +88,6 @@ func DropTestDB() error {
 func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
 		&user.User{},
+		&tip.Tip{},
 	)
 }

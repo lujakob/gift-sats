@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/lujakob/gift-sats/db"
 	"github.com/lujakob/gift-sats/handler"
+	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
 )
 
@@ -18,8 +19,9 @@ func main() {
 	db.AutoMigrate(d)
 
 	us := user.NewUserStore(d)
+	ts := tip.NewTipStore(d)
 
-	h := handler.NewHandler(us)
+	h := handler.NewHandler(us, ts)
 	h.Register(app)
 
 	err := app.Listen(":3100")

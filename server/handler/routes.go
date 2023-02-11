@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
 	"github.com/lujakob/gift-sats/utils"
 )
@@ -13,6 +14,7 @@ func (h *Handler) Register(app *fiber.App) {
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 	users := v1.Group("/users")
+	tips := v1.Group("/tips")
 	auth := v1.Group("/auth")
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -61,5 +63,30 @@ func (h *Handler) Register(app *fiber.App) {
 			return c.Status(http.StatusForbidden).JSON(utils.AccessForbidden())
 		}
 		return c.Status(http.StatusOK).JSON(newUserResponse(u))
+	})
+
+	tips.Get("/", func(c *fiber.Ctx) error {
+		list, count, error := h.tipStore.GetAll()
+		if error != nil {
+			fmt.Println(error)
+			return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+		}
+
+		return c.Status(http.StatusOK).JSON(newTipListResponse(list, count))
+	})
+
+	tips.Post("/", func(c *fiber.Ctx) error {
+		var t tip.Tip
+		req := &tipCreateRequest{}
+		if err := req.bind(c, &t); err != nil {
+			return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+		}
+
+		if err := h.tipStore.Create(&t); err != nil {
+			fmt.Println(err)
+			return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+		}
+
+		return c.Status(http.StatusCreated).JSON(newTipResponse(&t))
 	})
 }

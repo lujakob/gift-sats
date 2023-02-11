@@ -1,9 +1,8 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
 )
 
@@ -18,7 +17,6 @@ type userSignupRequest struct {
 func (r *userSignupRequest) bind(c *fiber.Ctx, u *user.User) error {
 	//validate
 
-	fmt.Println(c.Body())
 	if err := c.BodyParser(r); err != nil {
 		return err
 	}
@@ -47,5 +45,28 @@ func (r *userLoginRequest) bind(c *fiber.Ctx) error {
 	}
 
 	//fmt.Printf("%v", *r)
+	return nil
+}
+
+type tipCreateRequest struct {
+	Tip struct {
+		Amount   int  `json:"amount" validate:"required"`
+		Fee      int  `json:"fee" validate:"required"`
+		TipperID uint `json:"tipper_id" validate:"required"`
+	} `json:"tip"`
+}
+
+func (r *tipCreateRequest) bind(c *fiber.Ctx, t *tip.Tip) error {
+	//validate
+
+	if err := c.BodyParser(r); err != nil {
+		return err
+	}
+	//fmt.Printf("%v", *r)
+
+	t.Amount = r.Tip.Amount
+	t.Fee = r.Tip.Fee
+	t.TipperID = r.Tip.TipperID
+
 	return nil
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
 )
 
@@ -36,5 +37,51 @@ func newUserListResponse(users []user.User, count int64) *userListResponse {
 		r.Users = append(r.Users, ur)
 	}
 	r.UsersCount = count
+	return r
+}
+
+type tipResponse struct {
+	Tip struct {
+		ID     uint `json:"id"`
+		Tipper struct {
+			Username string `json:"username"`
+			ID       uint   `json:"id"`
+		} `json:"tipper"`
+		Amount int `json:"amount"`
+		Fee    int `json:"fee"`
+	} `json:"tip"`
+}
+
+func newTipResponse(t *tip.Tip) *tipResponse {
+	r := new(tipResponse)
+
+	r.Tip.Amount = t.Amount
+	r.Tip.Fee = t.Fee
+	r.Tip.Tipper.Username = t.Tipper.Username
+	r.Tip.Tipper.ID = t.Tipper.ID
+
+	return r
+}
+
+type tipListResponse struct {
+	Tips      []*tipResponse `json:"tips"`
+	TipsCount int64          `json:"tipsCount"`
+}
+
+func newTipListResponse(tips []tip.Tip, count int64) *tipListResponse {
+	r := new(tipListResponse)
+	tr := new(tipResponse)
+
+	for _, t := range tips {
+		tr.Tip.ID = t.ID
+		tr.Tip.Amount = t.Amount
+		tr.Tip.Fee = t.Fee
+		tr.Tip.Tipper.Username = t.Tipper.Username
+		tr.Tip.Tipper.ID = t.Tipper.ID
+
+		r.Tips = append(r.Tips, tr)
+	}
+
+	r.TipsCount = count
 	return r
 }
