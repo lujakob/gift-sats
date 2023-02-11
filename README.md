@@ -1,2 +1,3 @@
-# gifting-sats
+# gift-sats
+
 Pet project inspired by Lightsats

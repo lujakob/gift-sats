@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/lujakob/gifting-sats/user"
-	"github.com/lujakob/gifting-sats/utils"
+	"github.com/lujakob/gift-sats/user"
+	"github.com/lujakob/gift-sats/utils"
 )
 
 func (h *Handler) Register(app *fiber.App) {

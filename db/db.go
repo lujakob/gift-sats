@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/lujakob/gifting-sats/user"
+	"github.com/lujakob/gift-sats/user"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -14,7 +14,7 @@ import (
 
 func New() *gorm.DB {
 	//dsn := "host=/tmp user=realworld dbname=realworld"
-	dsn := "./database/gifting-sats.db"
+	dsn := "./database/gift-sats.db"
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
@@ -57,7 +57,7 @@ func New() *gorm.DB {
 }
 
 func TestDB() *gorm.DB {
-	dsn := "./../database/gifting-sats_test.db"
+	dsn := "./../database/gift-sats_test.db"
 	//newLogger := logger.New(
 	//log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 	//logger.Config{

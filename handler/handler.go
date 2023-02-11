@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/lujakob/gifting-sats/user"
+	"github.com/lujakob/gift-sats/user"
 )
 
 type Handler struct {

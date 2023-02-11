@@ -5,9 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/lujakob/gifting-sats/db"
-	"github.com/lujakob/gifting-sats/handler"
-	"github.com/lujakob/gifting-sats/user"
+	"github.com/lujakob/gift-sats/db"
+	"github.com/lujakob/gift-sats/handler"
+	"github.com/lujakob/gift-sats/user"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	h := handler.NewHandler(us)
 	h.Register(app)
 
-	err := app.Listen(":3000")
+	err := app.Listen(":3100")
 
 	if err != nil {
 		fmt.Printf("%v", err)

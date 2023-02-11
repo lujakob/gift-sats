@@ -1,4 +1,4 @@
-module github.com/lujakob/gifting-sats
+module github.com/lujakob/gift-sats
 
 go 1.19
 
