@@ -40,6 +40,7 @@ func (h *Handler) Register(app *fiber.App) {
 	v1 := api.Group("/v1")
 	users := v1.Group("/users")
 	tips := v1.Group("/tips")
+	wallets := v1.Group("/wallets")
 	auth := v1.Group("/auth")
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -186,5 +187,15 @@ func (h *Handler) Register(app *fiber.App) {
 		// @Todo create Achievement
 
 		return c.Status(http.StatusCreated).JSON(newTipResponse(&t))
+	})
+
+	wallets.Get("/", func(c *fiber.Ctx) error {
+		list, count, error := h.walletStore.GetAll()
+		if error != nil {
+			fmt.Println(error)
+			return c.Status(http.StatusNotFound).JSON(utils.NotFound())
+		}
+
+		return c.Status(http.StatusOK).JSON(newWalletListResponse(list, count))
 	})
 }

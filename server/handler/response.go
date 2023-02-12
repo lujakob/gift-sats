@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
+	"github.com/lujakob/gift-sats/wallet"
 )
 
 type userResponse struct {
@@ -83,5 +84,36 @@ func newTipListResponse(tips []tip.Tip, count int64) *tipListResponse {
 	}
 
 	r.TipsCount = count
+	return r
+}
+
+type walletResponse struct {
+	Wallet struct {
+		ID             uint   `json:"id"`
+		TipId          uint   `json:"tip_id"`
+		LnbitsWalletId string `json:"lnbits_wallet_id"`
+		LnbitsUserId   string `json:"lnbits_user_id"`
+	} `json:"tip"`
+}
+
+type walletListResponse struct {
+	Wallets     []*walletResponse `json:"wallets"`
+	WalletCount int64             `json:"walletCount"`
+}
+
+func newWalletListResponse(wallets []wallet.Wallet, count int64) *walletListResponse {
+	r := new(walletListResponse)
+	tr := new(walletResponse)
+
+	for _, t := range wallets {
+		tr.Wallet.ID = t.ID
+		tr.Wallet.TipId = t.TipId
+		tr.Wallet.LnbitsUserId = t.LnbitsUserId
+		tr.Wallet.LnbitsWalletId = t.LnbitsWalletId
+
+		r.Wallets = append(r.Wallets, tr)
+	}
+
+	r.WalletCount = count
 	return r
 }
