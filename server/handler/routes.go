@@ -1,14 +1,37 @@
 package handler
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/lujakob/gift-sats/tip"
+	"github.com/lujakob/gift-sats/config"
 	"github.com/lujakob/gift-sats/user"
 	"github.com/lujakob/gift-sats/utils"
 )
+
+func PrettyPrint(i interface{}) string {
+	s, _ := json.MarshalIndent(i, "", "\t")
+	return string(s)
+}
+
+type CreateLnbitsUserRequest struct {
+	AdminId    string `json:"admin_id"`
+	UserName   string `json:"user_name"`
+	WalletName string `json:"wallet_name"`
+}
+
+type CreateLnbitsUserResponse struct {
+	Wallets []struct {
+		ID       string `json:"id"`
+		Admin    string `json:"admin"`
+		User     string `json:"user"`
+		AdminKey string `json:"adminkey"`
+	} `json:"wallets"`
+}
 
 func (h *Handler) Register(app *fiber.App) {
 	api := app.Group("/api")
@@ -76,17 +99,73 @@ func (h *Handler) Register(app *fiber.App) {
 	})
 
 	tips.Post("/", func(c *fiber.Ctx) error {
-		var t tip.Tip
-		req := &tipCreateRequest{}
-		if err := req.bind(c, &t); err != nil {
-			return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+		config := config.GetConfig()
+
+		// @Todo throw error for missing configs
+		// if !config.LNBITS_API_KEY || !config.LNBITS_URL || !config.LNBITS_USER_ID
+
+		// @Todo: verify "Only tips with positive, whole amounts are allowed"
+
+		// @Todo: calculateFee
+
+		// createLNBitsUserAndWallet
+
+		tipId := 1
+
+		createLnbitsUserRequest := &CreateLnbitsUserRequest{
+			AdminId:    config.LNBITS_USER_ID,
+			UserName:   fmt.Sprint("tip-", tipId),
+			WalletName: fmt.Sprint("tip-", tipId),
 		}
 
-		if err := h.tipStore.Create(&t); err != nil {
-			fmt.Println(err)
-			return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+		jsonData, _ := json.Marshal(createLnbitsUserRequest)
+
+		fmt.Println(string(jsonData))
+
+		url := fmt.Sprint(config.LNBITS_URL, "/usermanager/api/v1/users")
+
+		req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Accept", "application/json")
+		req.Header.Set("X-Api-Key", config.LNBITS_API_KEY)
+
+		client := &http.Client{}
+		response, error := client.Do(req)
+		if error != nil {
+			panic(error)
 		}
 
-		return c.Status(http.StatusCreated).JSON(newTipResponse(&t))
+		defer response.Body.Close()
+
+		fmt.Println("response Status:", response.Status)
+		fmt.Println("response Headers:", response.Header)
+
+		body, _ := ioutil.ReadAll(response.Body)
+		fmt.Println("response Body:", string(body))
+
+		var result CreateLnbitsUserResponse
+		if err := json.Unmarshal(body, &result); err != nil { // Parse []byte to go struct pointer
+			fmt.Println("Can not unmarshal JSON")
+		}
+
+		wallet := result.Wallets[0]
+		fmt.Println(PrettyPrint(wallet))
+		fmt.Println(PrettyPrint(result))
+
+		return nil
+		/*
+			var t tip.Tip
+			req := &tipCreateRequest{}
+			if err := req.bind(c, &t); err != nil {
+				return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+			}
+
+			if err := h.tipStore.Create(&t); err != nil {
+				fmt.Println(err)
+				return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+			}
+
+			return c.Status(http.StatusCreated).JSON(newTipResponse(&t))
+		*/
 	})
 }

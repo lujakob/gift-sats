@@ -10,6 +10,7 @@ import (
 	"github.com/lujakob/gift-sats/handler"
 	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
+	"github.com/lujakob/gift-sats/wallet"
 )
 
 func main() {
@@ -23,8 +24,9 @@ func main() {
 
 	us := user.NewUserStore(d)
 	ts := tip.NewTipStore(d)
+	ws := wallet.NewWalletStore(d)
 
-	h := handler.NewHandler(us, ts)
+	h := handler.NewHandler(us, ts, ws)
 	h.Register(app)
 
 	err := app.Listen(":3100")

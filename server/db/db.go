@@ -8,6 +8,7 @@ import (
 
 	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
+	"github.com/lujakob/gift-sats/wallet"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -88,5 +89,6 @@ func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
 		&user.User{},
 		&tip.Tip{},
+		&wallet.Wallet{},
 	)
 }
