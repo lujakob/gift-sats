@@ -1,8 +1,9 @@
-package tip
+package stores
 
 import (
 	"errors"
 
+	"github.com/lujakob/gift-sats/models"
 	"gorm.io/gorm"
 )
 
@@ -16,8 +17,8 @@ func NewTipStore(db *gorm.DB) *TipStore {
 	}
 }
 
-func (us *TipStore) GetAll() ([]Tip, int64, error) {
-	var tips []Tip
+func (us *TipStore) GetAll() ([]models.Tip, int64, error) {
+	var tips []models.Tip
 	var count int64
 	if err := us.db.Find(&tips).Count(&count).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -29,6 +30,6 @@ func (us *TipStore) GetAll() ([]Tip, int64, error) {
 	return tips, count, nil
 }
 
-func (us *TipStore) Create(u *Tip) (err error) {
+func (us *TipStore) Create(u *models.Tip) (err error) {
 	return us.db.Create(u).Error
 }

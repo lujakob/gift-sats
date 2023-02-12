@@ -1,8 +1,9 @@
-package user
+package stores
 
 import (
 	"errors"
 
+	"github.com/lujakob/gift-sats/models"
 	"gorm.io/gorm"
 )
 
@@ -16,8 +17,8 @@ func NewUserStore(db *gorm.DB) *UserStore {
 	}
 }
 
-func (us *UserStore) GetAll() ([]User, int64, error) {
-	var users []User
+func (us *UserStore) GetAll() ([]models.User, int64, error) {
+	var users []models.User
 	var count int64
 	if err := us.db.Find(&users).Count(&count).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -29,9 +30,9 @@ func (us *UserStore) GetAll() ([]User, int64, error) {
 	return users, count, nil
 }
 
-func (us *UserStore) GetByEmail(email string) (*User, error) {
-	var m User
-	if err := us.db.Where(&User{Email: email}).First(&m).Error; err != nil {
+func (us *UserStore) GetByEmail(email string) (*models.User, error) {
+	var m models.User
+	if err := us.db.Where(&models.User{Email: email}).First(&m).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -40,6 +41,6 @@ func (us *UserStore) GetByEmail(email string) (*User, error) {
 	return &m, nil
 }
 
-func (us *UserStore) Create(u *User) (err error) {
+func (us *UserStore) Create(u *models.User) (err error) {
 	return us.db.Create(u).Error
 }

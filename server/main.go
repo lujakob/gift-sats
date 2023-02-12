@@ -1,37 +1,29 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/lujakob/gift-sats/config"
 	"github.com/lujakob/gift-sats/db"
-	"github.com/lujakob/gift-sats/handler"
-	"github.com/lujakob/gift-sats/tip"
-	"github.com/lujakob/gift-sats/user"
-	"github.com/lujakob/gift-sats/wallet"
+	"github.com/lujakob/gift-sats/stores"
 )
 
 func main() {
 	config := config.GetConfig()
 
-	app := fiber.New()
-	app.Use(recover.New())
+	e := echo.New()
+	e.Use(middleware.Recover())
 
 	d := db.New(config.DB_DSN)
 	db.AutoMigrate(d)
 
-	us := user.NewUserStore(d)
-	ts := tip.NewTipStore(d)
-	ws := wallet.NewWalletStore(d)
+	us := stores.NewUserStore(d)
+	ts := stores.NewTipStore(d)
+	ws := stores.NewWalletStore(d)
 
-	h := handler.NewHandler(us, ts, ws)
-	h.Register(app)
+	h := NewHandler(us, ts, ws)
+	h.RegisterRoutes(e)
 
-	err := app.Listen(":3100")
+	e.Logger.Fatal(e.Start(":1323"))
 
-	if err != nil {
-		fmt.Printf("%v", err)
-	}
 }

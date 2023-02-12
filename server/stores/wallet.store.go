@@ -1,8 +1,9 @@
-package wallet
+package stores
 
 import (
 	"errors"
 
+	"github.com/lujakob/gift-sats/models"
 	"gorm.io/gorm"
 )
 
@@ -16,8 +17,8 @@ func NewWalletStore(db *gorm.DB) *WalletStore {
 	}
 }
 
-func (us *WalletStore) GetAll() ([]Wallet, int64, error) {
-	var wallets []Wallet
+func (us *WalletStore) GetAll() ([]models.Wallet, int64, error) {
+	var wallets []models.Wallet
 	var count int64
 	if err := us.db.Find(&wallets).Count(&count).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -29,6 +30,6 @@ func (us *WalletStore) GetAll() ([]Wallet, int64, error) {
 	return wallets, count, nil
 }
 
-func (ws *WalletStore) Create(u *Wallet) (err error) {
+func (ws *WalletStore) Create(u *models.Wallet) (err error) {
 	return ws.db.Create(u).Error
 }

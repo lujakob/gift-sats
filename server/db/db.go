@@ -6,9 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/lujakob/gift-sats/tip"
-	"github.com/lujakob/gift-sats/user"
-	"github.com/lujakob/gift-sats/wallet"
+	"github.com/lujakob/gift-sats/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -87,8 +85,8 @@ func DropTestDB() error {
 
 func AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(
-		&user.User{},
-		&tip.Tip{},
-		&wallet.Wallet{},
+		&models.User{},
+		&models.Tip{},
+		&models.Wallet{},
 	)
 }
