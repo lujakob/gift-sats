@@ -133,6 +133,28 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "wallets",
+			"item": [
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiBaseUrl}}/wallets",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"wallets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
