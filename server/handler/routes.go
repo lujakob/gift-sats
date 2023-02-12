@@ -9,8 +9,10 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/lujakob/gift-sats/config"
+	"github.com/lujakob/gift-sats/tip"
 	"github.com/lujakob/gift-sats/user"
 	"github.com/lujakob/gift-sats/utils"
+	"github.com/lujakob/gift-sats/wallet"
 )
 
 func PrettyPrint(i interface{}) string {
@@ -26,7 +28,7 @@ type CreateLnbitsUserRequest struct {
 
 type CreateLnbitsUserResponse struct {
 	Wallets []struct {
-		ID       string `json:"id"`
+		WalletId string `json:"id"`
 		Admin    string `json:"admin"`
 		User     string `json:"user"`
 		AdminKey string `json:"adminkey"`
@@ -108,14 +110,25 @@ func (h *Handler) Register(app *fiber.App) {
 
 		// @Todo: calculateFee
 
-		// createLNBitsUserAndWallet
+		// first create and store tip
+		var t tip.Tip
+		req := &tipCreateRequest{}
+		if err := req.bind(c, &t); err != nil {
+			return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+		}
 
-		tipId := 1
+		if err := h.tipStore.Create(&t); err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println(PrettyPrint(t))
+
+		// fetch LnbitsWallet
 
 		createLnbitsUserRequest := &CreateLnbitsUserRequest{
 			AdminId:    config.LNBITS_USER_ID,
-			UserName:   fmt.Sprint("tip-", tipId),
-			WalletName: fmt.Sprint("tip-", tipId),
+			UserName:   fmt.Sprint("tip-", t.ID),
+			WalletName: fmt.Sprint("tip-", t.ID),
 		}
 
 		jsonData, _ := json.Marshal(createLnbitsUserRequest)
@@ -124,13 +137,13 @@ func (h *Handler) Register(app *fiber.App) {
 
 		url := fmt.Sprint(config.LNBITS_URL, "/usermanager/api/v1/users")
 
-		req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Accept", "application/json")
-		req.Header.Set("X-Api-Key", config.LNBITS_API_KEY)
+		walletReq, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+		walletReq.Header.Set("Content-Type", "application/json")
+		walletReq.Header.Set("Accept", "application/json")
+		walletReq.Header.Set("X-Api-Key", config.LNBITS_API_KEY)
 
 		client := &http.Client{}
-		response, error := client.Do(req)
+		response, error := client.Do(walletReq)
 		if error != nil {
 			panic(error)
 		}
@@ -148,24 +161,30 @@ func (h *Handler) Register(app *fiber.App) {
 			fmt.Println("Can not unmarshal JSON")
 		}
 
-		wallet := result.Wallets[0]
-		fmt.Println(PrettyPrint(wallet))
 		fmt.Println(PrettyPrint(result))
 
-		return nil
-		/*
-			var t tip.Tip
-			req := &tipCreateRequest{}
-			if err := req.bind(c, &t); err != nil {
-				return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
-			}
+		lnbitsWallet := result.Wallets[0]
 
-			if err := h.tipStore.Create(&t); err != nil {
-				fmt.Println(err)
-				return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
-			}
+		// create and store wallet
 
-			return c.Status(http.StatusCreated).JSON(newTipResponse(&t))
-		*/
+		newWallet := wallet.Wallet{
+			TipId:          t.ID,
+			LnbitsWalletId: lnbitsWallet.WalletId,
+			LnbitsUserId:   lnbitsWallet.User,
+			AdminKey:       lnbitsWallet.Admin,
+		}
+
+		if err := h.walletStore.Create(&newWallet); err != nil {
+			fmt.Println(err)
+			return c.Status(http.StatusUnprocessableEntity).JSON(utils.NewError(err))
+		}
+
+		// @Todo if creating or storing wallet fails, delete tip
+
+		// @Todo recreateTipFundingInvoice
+
+		// @Todo create Achievement
+
+		return c.Status(http.StatusCreated).JSON(newTipResponse(&t))
 	})
 }
