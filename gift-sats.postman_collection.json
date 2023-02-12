@@ -14,12 +14,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{apiBaseUrl}}/users",
+							"raw": "{{apiBaseUrl}}/users/",
 							"host": [
 								"{{apiBaseUrl}}"
 							],
 							"path": [
-								"users"
+								"users",
+								""
 							]
 						}
 					},
@@ -113,7 +114,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tip\": {\n        \"tipperId\": 0,\n        \"amount\": 100,\n        \"fee\": 0\n    }\n}",
+							"raw": "{\n    \"tip\": {\n        \"tipperId\": 0,\n        \"amount\": 200,\n        \"fee\": 10\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -155,6 +156,20 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "hello world",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiBaseUrl}}",
+					"host": [
+						"{{apiBaseUrl}}"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

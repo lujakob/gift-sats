@@ -13,6 +13,11 @@ func main() {
 
 	e := echo.New()
 	e.Use(middleware.Recover())
+	e.Pre(middleware.RemoveTrailingSlash())
+
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
 
 	d := db.New(config.DB_DSN)
 	db.AutoMigrate(d)
