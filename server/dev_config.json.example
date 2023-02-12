@@ -1,0 +1,6 @@
+{
+  "DB_DSN": "./database/gift-sats.db",
+	"LNBITS_URL": "",
+	"LNBITS_API_KEY": "",
+	"LNBITS_USER_ID": ""
+}

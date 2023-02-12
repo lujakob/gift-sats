@@ -13,9 +13,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func New() *gorm.DB {
+func New(dsn string) *gorm.DB {
 	//dsn := "host=/tmp user=realworld dbname=realworld"
-	dsn := "./database/gift-sats.db"
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/lujakob/gift-sats/config"
 	"github.com/lujakob/gift-sats/db"
 	"github.com/lujakob/gift-sats/handler"
 	"github.com/lujakob/gift-sats/tip"
@@ -12,10 +13,12 @@ import (
 )
 
 func main() {
+	config := config.GetConfig()
+
 	app := fiber.New()
 	app.Use(recover.New())
 
-	d := db.New()
+	d := db.New(config.DB_DSN)
 	db.AutoMigrate(d)
 
 	us := user.NewUserStore(d)

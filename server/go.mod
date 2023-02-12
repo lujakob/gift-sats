@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/gofiber/fiber/v2 v2.42.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -18,11 +19,13 @@ require (
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
 	github.com/savsgio/gotils v0.0.0-20220530130905-52f3993e8d6d // indirect
 	github.com/tinylib/msgp v1.1.6 // indirect
+	github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.44.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/sqlite v1.4.4 // indirect
 	gorm.io/gorm v1.24.5 // indirect
 )
