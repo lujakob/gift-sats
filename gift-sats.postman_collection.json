@@ -64,7 +64,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user\": {\n        \"email\": \"test@test.de\",\n        \"username\": \"my uername\",\n        \"password\": \"test\"\n    }\n}",
+							"raw": "{\n    \"user\": {\n        \"email\": \"lu.jakob@googlemail.com\",\n        \"username\": \"lukas\",\n        \"password\": \"test\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -79,6 +79,54 @@
 							"path": [
 								"auth",
 								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "tips",
+			"item": [
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiBaseUrl}}/tips",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"tips"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tip\": {\n        \"tipperId\": 0,\n        \"amount\": 100,\n        \"fee\": 0\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiBaseUrl}}/tips",
+							"host": [
+								"{{apiBaseUrl}}"
+							],
+							"path": [
+								"tips"
 							]
 						}
 					},
