@@ -1,3 +1,5 @@
 .vscode
 
 /database/*
+
+/server/dev_config.json
