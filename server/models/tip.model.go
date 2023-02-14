@@ -9,5 +9,5 @@ type Tip struct {
 	Amount   int `gorm:"not nul"`
 	Fee      int `gorm:"not nul"`
 	Tipper   User
-	TipperID uint `gorm:"not nul"`
+	TipperID uint
 }

@@ -6,14 +6,16 @@ import (
 	"os"
 	"time"
 
+	"github.com/lujakob/gift-sats/config"
 	"github.com/lujakob/gift-sats/models"
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-func New(dsn string) *gorm.DB {
-	//dsn := "host=/tmp user=realworld dbname=realworld"
+func New() *gorm.DB {
+	config := config.GetConfig()
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
@@ -25,19 +27,13 @@ func New(dsn string) *gorm.DB {
 		},
 	)
 
-	// Globally mode
-	db, err := gorm.Open(sqlite.Open(dsn), &gorm.Config{
-		Logger: newLogger,
+	dsn := config.DB_DSN
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger:                                   newLogger,
+		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 
-	/*
-	 *db, err := gorm.Open(postgres.New(postgres.Config{
-	 *  DSN: dsn,
-	 *  //PreferSimpleProtocol: true, // disables implicit prepared statement usage
-	 *}), &gorm.Config{})
-	 */
-
-	//db, err := gorm.Open("postgresql", "postgresql://realworld@/realworld?host=/tmp")
 	//db, err := gorm.Open("sqlite3", "./database/realworld.db")
 	if err != nil {
 		fmt.Println("storage err: ", err)

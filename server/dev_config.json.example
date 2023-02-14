@@ -1,5 +1,7 @@
 {
-  "DB_DSN": "./database/gift-sats.db",
+  "SERVER_HOST": "localhost",
+  "SERVER_PORT": "1323",
+  "DB_DSN": "host=localhost user=newuser password=password dbname=giftsats port=5432 sslmode=disable",
 	"LNBITS_URL": "",
 	"LNBITS_API_KEY": "",
 	"LNBITS_USER_ID": ""

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/lujakob/gift-sats/config"
@@ -19,7 +21,7 @@ func main() {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 
-	d := db.New(config.DB_DSN)
+	d := db.New()
 	db.AutoMigrate(d)
 
 	us := stores.NewUserStore(d)
@@ -29,6 +31,6 @@ func main() {
 	h := NewHandler(us, ts, ws)
 	h.RegisterRoutes(e)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", config.SERVER_HOST, config.SERVER_PORT)))
 
 }

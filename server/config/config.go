@@ -7,6 +7,8 @@ import (
 )
 
 type Configuration struct {
+	SERVER_HOST    string
+	SERVER_PORT    string
 	DB_DSN         string
 	LNBITS_URL     string
 	LNBITS_API_KEY string

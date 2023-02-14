@@ -1,0 +1,20 @@
+version: '3'
+# TODO: name: lightsats
+
+services:
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: newuser 
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: giftsats
+    volumes:
+      - ./.db/:/var/lib/postgresql/data/
+  mailhog:
+      image: mailhog/mailhog
+      container_name: 'mailhog_giftsats'
+      ports:
+        - "1025:1025"
+        - "8025:8025"

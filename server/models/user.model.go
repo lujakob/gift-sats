@@ -13,6 +13,7 @@ type User struct {
 	Username string `gorm:"not nul"`
 	Email    string `gorm:"unique;not null"`
 	Password string `gorm:"not nul"`
+	Tips     []Tip  `gorm:"foreignKey:TipperID"`
 }
 
 func (u *User) HashPassword(plain string) (string, error) {
